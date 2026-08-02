@@ -14,6 +14,7 @@
 ---@class tex2uni.abbreviations.Config
 ---@field enable? boolean whether to automatically enable expansion
 ---@field leader? string which key to use to trigger abbreviation expansion
+---@field distributor? string which key to use to distribute
 ---@field extra table<string, string> a table of extra abbreviations to enable
 
 ---@type tex2uni.MergedConfig
@@ -23,6 +24,7 @@ local DEFAULTS = {
 	---@type tex2uni.abbreviations.Config
 	abbreviations = {
 		leader = "\\",
+		distributor = "\#",
 		extra = {},
 	},
 

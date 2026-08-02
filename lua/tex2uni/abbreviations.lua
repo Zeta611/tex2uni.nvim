@@ -177,13 +177,27 @@ local function insert_char_pre()
 	end
 end
 
-local function convert_abbrev(abbrev)
+local function convert_abbrev(abbrev, distribute)
 	if abbrev:find(abbreviations.leader) ~= 1 then
 		return abbrev
 	end
 	abbrev = abbrev:sub(#abbreviations.leader + 1)
 	if abbrev:find(abbreviations.leader) == 1 then
-		return abbreviations.leader .. convert_abbrev(abbrev:sub(#abbreviations.leader + 1))
+		return abbreviations.leader .. convert_abbrev(abbrev:sub(#abbreviations.leader + 1), distribute)
+	end
+	if distribute == nil then
+		distribute = (abbreviations.distributor ~= "")
+	end
+	if distribute then
+		local distrpos = abbrev:find(abbreviations.distributor)
+		if distrpos ~= fail and distrpos ~= 1 then
+			local prefix = abbrev:sub(1, distrpos - 1)
+			local newabbrev = ""
+			for i = distrpos + 1, #abbrev do
+				newabbrev = newabbrev .. abbreviations.leader .. prefix .. abbrev:sub(i,i)
+			end
+			return convert_abbrev(newabbrev, false)
+		end
 	end
 	local matchlen, fromlen, repl = 0, 99999, ""
 	for from, to in pairs(abbreviations.abbreviations) do
@@ -202,7 +216,7 @@ local function convert_abbrev(abbrev)
 	if matchlen == 0 then
 		return abbreviations.leader .. abbrev
 	end
-	return repl .. convert_abbrev(abbrev:sub(matchlen + 1))
+	return repl .. convert_abbrev(abbrev:sub(matchlen + 1), distribute)
 end
 
 function abbreviations.convert()
@@ -239,9 +253,10 @@ function abbreviations.convert()
 end
 
 function abbreviations.enable(pattern, opts)
-	opts = vim.tbl_extend("keep", opts or {}, { leader = "\\", extra = {} })
+	opts = vim.tbl_extend("keep", opts or {}, { leader = "\\", distributor = "#", extra = {} })
 
 	abbreviations.leader = opts.leader
+	abbreviations.distributor = opts.distributor
 
 	abbreviations.abbreviations = abbreviations.load()
 	for from, to in pairs(opts.extra) do

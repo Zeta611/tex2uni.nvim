@@ -8,6 +8,16 @@
 
 - Converts LaTeX-like abbreviations into Unicode characters.
 
+### Distributor
+
+You can use a distributor to distribute a prefix to a sequence of characters.
+
+The default distributor character is `#` and can be changed with the `abbreviations.distributor` option. Set this option to the empty string `""` to disable.
+
+If the prefix is empty, the abbreviation is left unchanged. Eg. `\#foo` is *not* distributed to `\foo` and is rather directly converted to `♯foo`.
+
+Example: `\bf#Set` will be distributed to `\bfS\bfe\bft` and converted to 𝐒𝐞𝐭.
+
 ## Installation
 
 With `lazy.nvim`:
