@@ -1,6 +1,8 @@
+
+
 # tex2uni.nvim
 
-`tex2uni.nvim` is a LazyVim plugin for TeX-to-Unicode conversion in Neovim.
+`tex2uni.nvim` is a Neovim plugin for TeX-to-Unicode conversion in Neovim.
 
 ![tex2uni demo](tex2uni.gif)
 
